@@ -97,7 +97,7 @@ public class MifareCardHandler extends Service implements Runnable {
 
 
     public interface Callbacks {
-        void showOnUi(String serialNumber, String block4, String block5, String block6, String block7);
+        void showOnUi(String serialNumber, String block20, String block21, String block22);
 
     }
 
@@ -128,20 +128,19 @@ public class MifareCardHandler extends Service implements Runnable {
 
 
                     byte[] bufferAuth = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF,};
-                    byte[] bufferblock8 = new byte[16];
-                    byte[] bufferblock9 = new byte[16];
-                    byte[] bufferblock10 = new byte[16];
-                    byte[] bufferblock11 = new byte[16];
+                    byte[] bufferblock20 = new byte[16];
+                    byte[] bufferblock21 = new byte[16];
+                    byte[] bufferblock22 = new byte[16];
 
 
-                    int auth = piccManager.m1_keyAuth(1, 8, 6, bufferAuth, SNLen, SN);
 
+                    int auth = piccManager.m1_keyAuth(1, 20, 6, bufferAuth, SNLen, SN);
                     if (auth == 0) {
                         //its raw-card and first time mifare
                         //lets change its password
                         Log.d(TAG, "handleCard:  its raw mifare card");
 
-                        byte[] bufferbl_11 = new byte[]{
+                        byte[] bufferbl_23 = new byte[]{
                                 (byte) 0x00,
                                 (byte) 0x00,
                                 (byte) 0x00,
@@ -154,7 +153,6 @@ public class MifareCardHandler extends Service implements Runnable {
                                 (byte) 0x77,
                                 (byte) 0x00,
 
-
                                 (byte) 0x3F,
                                 (byte) 0x10,
                                 (byte) 0x12,
@@ -164,19 +162,24 @@ public class MifareCardHandler extends Service implements Runnable {
                         };
 
 
-                        byte[] bufferbl_8_9_10 = new byte[]{(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,};
-                        piccManager.m1_writeBlock(8, 16, bufferbl_8_9_10);
-                        piccManager.m1_writeBlock(9, 16, bufferbl_8_9_10);
-                        piccManager.m1_writeBlock(10, 16, bufferbl_8_9_10);
-                        piccManager.m1_writeBlock(11, 16, bufferbl_11);
+                        byte[] bufferbl_20_21_22 = new byte[]{(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,};
+                        piccManager.m1_writeBlock(20, 16, bufferbl_20_21_22);
+                        piccManager.m1_writeBlock(21, 16, bufferbl_20_21_22);
+                        piccManager.m1_writeBlock(22, 16, bufferbl_20_21_22);
+                        piccManager.m1_writeBlock(23, 16, bufferbl_23);
 
 
                     } else {
 
-                        Log.d(TAG, "handleCard:  its elmosanat mifare card");
-                        byte[] bufferbl_11_ = new byte[]{
+                        Log.d(TAG, "handleCard: its elmosanat mifare card");
+
+                        piccManager.close();
+                        piccManager.open();
+                        piccManager.request(CardType, Atq);
+                        piccManager.antisel(SN, sak);
 
 
+                        byte[] bufferbl_23_ = new byte[]{
                                 (byte) 0x3F,
                                 (byte) 0x10,
                                 (byte) 0x12,
@@ -186,29 +189,29 @@ public class MifareCardHandler extends Service implements Runnable {
                         };
 
 
-                        int auth_ = piccManager.m1_keyAuth(1, 8, 6, bufferbl_11_, SNLen, SN);
+                        int auth_ = piccManager.m1_keyAuth(1, 20, 6, bufferbl_23_, SNLen, SN);
 
 
-                        int result8 = piccManager.m1_readBlock(8, bufferblock8);
-                        int result9 = piccManager.m1_readBlock(9, bufferblock9);
-                        int result10 = piccManager.m1_readBlock(10, bufferblock10);
-                        int result11 = piccManager.m1_readBlock(11, bufferblock11);
+                        int result20 = piccManager.m1_readBlock(20, bufferblock20);
+                        int result21 = piccManager.m1_readBlock(21, bufferblock21);
+                        int result22 = piccManager.m1_readBlock(22, bufferblock22);
 
 
                         Log.d(TAG, "handleCard: \n" +
                                 "\nauth result : " + auth_ +
-                                "\nresult8 : " + result8 +
-                                "\nresult9 : " + result9 +
-                                "\nresult10 : " + result10 +
-                                "\nresult11 : " + result11);
+                                "\nresult20 : " + result20 +
+                                "\nresult21 : " + result21 +
+                                "\nresult22 : " + result22
+
+
+                        );
 
 
                         activity.showOnUi(firstPart + "" + secondPart + "",
 
-                                ByteUtils.ByteArrToHex(bufferblock8),
-                                ByteUtils.ByteArrToHex(bufferblock9),
-                                ByteUtils.ByteArrToHex(bufferblock10),
-                                ByteUtils.ByteArrToHex(bufferblock11)
+                                ByteUtils.ByteArrToHex(bufferblock20),
+                                ByteUtils.ByteArrToHex(bufferblock21),
+                                ByteUtils.ByteArrToHex(bufferblock22)
 
 
                         );

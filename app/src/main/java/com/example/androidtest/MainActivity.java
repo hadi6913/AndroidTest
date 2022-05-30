@@ -42,13 +42,13 @@ public class MainActivity extends AppCompatActivity implements MifareCardHandler
     }
 
     @Override
-    public void showOnUi(String serialNumber ,  String block8, String block9,String block10 , String block11) {
+    public void showOnUi(String serialNumber ,  String block20, String block21,String block22 ) {
 
         Log.d(TAG, "showOnUi > serialNumber : "+serialNumber);
-        Log.d(TAG, "showOnUi > block 8 : "+block8);
-        Log.d(TAG, "showOnUi > block 9 : "+block9);
-        Log.d(TAG, "showOnUi > block 10 : "+block10);
-        Log.d(TAG, "showOnUi > block 11 : "+block11);
+        Log.d(TAG, "showOnUi > block 20 : "+block20);
+        Log.d(TAG, "showOnUi > block 21 : "+block21);
+        Log.d(TAG, "showOnUi > block 22 : "+block22);
+
 
 
     }
